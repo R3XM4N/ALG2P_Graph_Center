@@ -60,9 +60,61 @@ uint64 Graph::GetMinDistance(uint32 dense_source_node_id, uint32 dense_destinati
     return 0 - 1;
 }
 
+/// @brief Hides threading
+namespace Detail{
+    void SubEdge(const vector<vector<uint32>> &neighbors, const shared_ptr<Node> &node, const uint32 &src_id){
+        const uint32 nodes_count = neighbors.size();
+        std::vector<int32_t> distance(nodes_count, -1);
+        std::fill(distance.begin(), distance.end(), -1);
+        std::queue<uint32> bfs;
+
+        bfs.push(src_id);
+        distance[src_id] = 0;
+        uint64 max_dist = 0;
+
+        while (!bfs.empty()) {
+            const uint32 cur_node = bfs.front();
+            bfs.pop();
+
+            const int32_t cur_distance = distance[cur_node];
+            if (static_cast<uint64>(cur_distance) > max_dist)
+                max_dist = static_cast<uint64>(cur_distance);
+
+            for (const auto neighbor : neighbors[cur_node]) {
+                if (distance[neighbor] == -1) {
+                    distance[neighbor] = cur_distance + 1;
+                    bfs.push(neighbor);
+                }
+            }
+        }
+        node->eccentricity = max_dist;
+    }
+}
+
 void Graph::Edging()
 {
-    const uint32 nodes_count = neighbors.size();
+    if (this->max_threads > 2){
+        vector<std::thread> threads;
+        const uint32 nodes_count = this->neighbors.size();
+    
+        for (uint32 src_id = 0; src_id < nodes_count; ++src_id){
+            threads.emplace_back(Detail::SubEdge, std::cref(this->neighbors), this->node_ptr_mapping[src_id], src_id); //HOLY CONST REF MAKES IT SO MUCH FASTER
+            if (threads.size() == this->max_threads){
+                for (unsigned short thread = 0; thread < this->max_threads; thread++){
+                    threads[thread].join();
+                }
+                threads.clear();
+            }
+        }
+        //uneven
+        for (auto &thread : threads){
+            if (thread.joinable())
+                thread.join();
+        }
+        return;    
+    }
+
+    const uint32 nodes_count = this->neighbors.size();
     std::vector<int32_t> distance(nodes_count, -1);
 
     for (uint32 src_id = 0; src_id < nodes_count; ++src_id) {
@@ -81,7 +133,7 @@ void Graph::Edging()
             if (static_cast<uint64>(cur_distance) > max_dist)
                 max_dist = static_cast<uint64>(cur_distance);
 
-            for (const auto neighbor : neighbors[cur_node]) {
+            for (const auto neighbor : this->neighbors[cur_node]) {
                 if (distance[neighbor] == -1) {
                     distance[neighbor] = cur_distance + 1;
                     bfs.push(neighbor);
@@ -125,6 +177,10 @@ void Graph::LoadFromFFileTXT(const std::string &file_location){
         AddEdge(active_node_id, active_neighbor_id);
     }
     stream.close();
+}
+
+void Graph::AvaibleThreads(unsigned short int new_thread_max){
+    this->max_threads = new_thread_max;
 }
 
 Graph::Graph(){

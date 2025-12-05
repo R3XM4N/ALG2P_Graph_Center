@@ -7,10 +7,10 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <unordered_set>
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <thread>
 
 using uint64 = unsigned long long int;
 using uint32 = unsigned long int;
@@ -43,6 +43,10 @@ private:
     /// @param node_a_indentifier Identifier of node a of the ones that should the edge exist between
     /// @param node_b_indentifier Identifier of node b of the ones that should the edge exist between
     void AddEdge(uint64 node_a_indentifier, uint64 node_b_indentifier);
+    /// @brief Recalculates all nodes eccentricity
+    void Edging();
+    /// @brief Maximum ammount of threads to run on
+    unsigned short max_threads = 1;
 public:
     /// @brief Alternative call of GetMinDistance() with shared_ptrs
     /// @param source_node Source node
@@ -54,8 +58,6 @@ public:
     /// @param destination_node_id destination node id
     /// @return Returns the minimum Distance betweeen these nodes
     uint64 GetMinDistance(uint32 dense_source_node_id, uint32 dense_destination_node_id);
-    /// @brief Recalculates all nodes eccentricity
-    void Edging();
     /// @brief Returns the center node(s) of the graph
     /// @return Returns either singular list of the cented node or a multiple member list of all nodes qualifying as center
     vector<shared_ptr<Node>> GetCenter();
@@ -66,6 +68,9 @@ public:
     /// @brief Loads data from the "formated" text file into the graph 
     /// @param file_location Location of the file in the file system
     void LoadFromFFileTXT(const std::string &file_location);
+    /// @brief Sets the ammount of avaible threads for the program
+    /// @param new_thread_max ammount of maximum avaible work threads 
+    void AvaibleThreads(unsigned short int new_thread_max);
 };
 
 
