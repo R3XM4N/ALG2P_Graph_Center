@@ -1,58 +1,28 @@
-#--------------------------------------------------------------------
-# Project name and output location
-#--------------------------------------------------------------------
 PROJECT_NAME           = "ALG2P_Graph_Center"
 OUTPUT_DIRECTORY       = docs
 CREATE_SUBDIRS         = YES
 
-#--------------------------------------------------------------------
-# Input files
-#--------------------------------------------------------------------
 INPUT                  = include source
 FILE_PATTERNS          = *.hpp *.h *.cpp *.c
 RECURSIVE              = YES
 EXCLUDE                =
 EXCLUDE_SYMLINKS      = NO
 
-#--------------------------------------------------------------------
-# Language options
-#--------------------------------------------------------------------
 OPTIMIZE_OUTPUT_FOR_C++ = YES
 EXTRACT_ALL            = YES
 EXTRACT_PRIVATE        = YES
 EXTRACT_STATIC         = YES
 
-#--------------------------------------------------------------------
-# Graphviz (dot) – required for call graphs
-#--------------------------------------------------------------------
-HAVE_DOT                = YES
-DOT_PATH                =          # leave empty → use system path
-CALL_GRAPH              = YES
-CALLER_GRAPH            = YES
-CLASS_DIAGRAMS          = YES
-
-#--------------------------------------------------------------------
-# HTML output
-#--------------------------------------------------------------------
+# HTML
 GENERATE_HTML           = YES
 HTML_OUTPUT             = html
-HTML_FILE_EXTENSION     = .html
+HTML_FILE_EXTENSION     = .html 
 HTML_COLORSTYLE_HUE     = 220
 HTML_COLORSTYLE_SAT     = 100
 HTML_COLORSTYLE_GAMMA   = 80
 
-#--------------------------------------------------------------------
-# Disable other formats we don’t need
-#--------------------------------------------------------------------
 GENERATE_LATEX          = NO
 GENERATE_RTF            = NO
 GENERATE_MAN           = NO
 GENERATE_XML           = NO
 GENERATE_DOCSET        = NO
-
-#--------------------------------------------------------------------
-# Miscellaneous
-#--------------------------------------------------------------------
-WARNINGS                = YES
-WARN_IF_UNDOCUMENTED    = YES
-MARKDOWN_SUPPORT       = YES
