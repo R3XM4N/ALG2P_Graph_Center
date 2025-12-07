@@ -3,6 +3,8 @@
 
 #include "include/graph.hpp"
 
+using std::vector, std::shared_ptr;
+
 int main(int argc, char** argv){
     if (argc < 2 || argc > 3){
         std::cerr << "\e[0;31mINVALID ARGUMENT COUNT.\e[0m\n";

@@ -1,5 +1,7 @@
 #include "../include/graph.hpp"
 
+using std::shared_ptr, std::unordered_map, std::vector, std::queue;
+
 void Graph::AddNode(uint64 node_indentifier){
     if (this->node_to_index.find(node_indentifier) == this->node_to_index.end()){
         this->node_ptr_mapping.push_back(std::make_shared<Node>());
@@ -125,7 +127,7 @@ void Graph::Edging()
         distance[src_id] = 0;
         uint64 max_dist = 0;
 
-        while (!bfs.empty()) {
+        while (!bfs.empty()){
             const uint32 cur_node = bfs.front();
             bfs.pop();
 
@@ -133,8 +135,8 @@ void Graph::Edging()
             if (static_cast<uint64>(cur_distance) > max_dist)
                 max_dist = static_cast<uint64>(cur_distance);
 
-            for (const auto neighbor : this->neighbors[cur_node]) {
-                if (distance[neighbor] == -1) {
+            for (const auto neighbor : this->neighbors[cur_node]){
+                if (distance[neighbor] == -1){
                     distance[neighbor] = cur_distance + 1;
                     bfs.push(neighbor);
                 }
